@@ -291,12 +291,13 @@ class OpenGraphOperator
     {
         $arrayKeys = array_keys( $returnArray );
 
-        if ( !in_array( 'og:title', $arrayKeys ) || !in_array( 'og:type', $arrayKeys ) ||
-            !in_array( 'og:image', $arrayKeys ) || !in_array( 'og:url', $arrayKeys ) )
+        $required_tags = $this->ogIni->variable( 'General', 'RequiredTags' );
+
+        if ( count(array_diff($required_tags, $arrayKeys)) > 0 )
         {
             if ( $this->debug )
             {
-                eZDebug::writeError( $arrayKeys, 'Missing an OG required field: title, image, type, or url' );
+                eZDebug::writeError( $arrayKeys, 'Missing an OG required field: ' . implode(', ', $required_tags) );
             }
 
             return false;
